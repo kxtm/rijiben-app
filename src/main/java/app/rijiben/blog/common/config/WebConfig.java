@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.DateFormatter;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -25,13 +25,12 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import javax.sql.DataSource;
+import java.util.List;
 
-
-@EnableAspectJAutoProxy
+@Configuration
 @ComponentScan(basePackageClasses = BlogStart.class)
 @MapperScan(basePackages = Constr.MAPPER_SCAN)
 @EnableTransactionManagement
-@Configuration
 public class WebConfig extends DelegatingWebMvcConfiguration {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -89,4 +88,9 @@ public class WebConfig extends DelegatingWebMvcConfiguration {
         super.addFormatters(registry);
     }
 
+    @Override
+    protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+
+        super.configureMessageConverters(converters);
+    }
 }
