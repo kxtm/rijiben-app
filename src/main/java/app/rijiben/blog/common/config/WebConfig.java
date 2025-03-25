@@ -17,10 +17,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
@@ -53,6 +50,17 @@ public class WebConfig implements WebMvcConfigurer {
         sqlSessionFactoryBean.setTypeAliasesPackage(Constr.TYPE_ALIASES_PACKAGE);
         sqlSessionFactoryBean.setTypeAliasesSuperType(IEntity.class);
         return sqlSessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public AuthConfig authConfig() {
+        return new AuthConfig();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authConfig()).addPathPatterns(Constr.ADM_URL.concat("**")).excludePathPatterns(new String[]{Constr.ADM_URL,Constr.ADM_URL.concat("login"),Constr.ADM_URL.concat("captcha")});
+        WebMvcConfigurer.super.addInterceptors(registry);
     }
 
     @Override
